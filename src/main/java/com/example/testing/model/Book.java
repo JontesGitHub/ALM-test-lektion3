@@ -1,13 +1,16 @@
 package com.example.testing.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.UUID;
 
+@NoArgsConstructor // lombok
+@AllArgsConstructor // lombok
 @Data // lombok
 @Entity
-//@Table(name = "book")
 public class Book {
     @Id
     @GeneratedValue
@@ -18,5 +21,10 @@ public class Book {
 
 //    @Column(name = "author", nullable = false)
     private String author;
+
+    public Book(String title, String author) {
+        this.title = title;
+        this.author = author;
+    }
 
 }
