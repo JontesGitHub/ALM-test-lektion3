@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
@@ -82,16 +83,12 @@ class BookServiceTest {
 
     @Test
     void save_invalid() {
-
         Book invalidBook = new Book();
-
-
         // -----------------------------------
 
         assertThrows(ResponseStatusException.class, () -> bookService.save(invalidBook));
 
         // ----------------------------------
-
 
         verify(mockRepository, times(0)).save(any());
         verify(mockRepository, times(0)).existsBookByAuthorIgnoreCaseAndTitleIgnoreCase(anyString(), anyString());
@@ -100,7 +97,24 @@ class BookServiceTest {
 
     @Test
     void save_existing() {
+        String expectedTitle = "title";
+        String expectedAuthor = "author";
+
+        Book savingBook = new Book();
+        savingBook.setTitle(expectedTitle);
+        savingBook.setAuthor(expectedAuthor);
+
+        when(mockRepository.existsBookByAuthorIgnoreCaseAndTitleIgnoreCase(anyString(), anyString()))
+                .thenReturn(true);
+
+        // -----------------------------------
+
+        assertThrows(ResponseStatusException.class, () -> bookService.save(savingBook));
+
+        // ----------------------------------
 
 
+        verify(mockRepository, times(0)).save(any());
+        verify(mockRepository).existsBookByAuthorIgnoreCaseAndTitleIgnoreCase(anyString(), anyString());
     }
 }
